@@ -7,17 +7,17 @@
 <chapter xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="cha.ceph.upgrade">
  <title>Upgrading from Previous Releases</title>
  <info>
-      <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
-        <dm:maintainer>tbazant@suse.com</dm:maintainer>
-        <dm:status>editing</dm:status>
-        <dm:deadline/>
-        <dm:priority/>
-        <dm:translation>yes</dm:translation>
-        <dm:languages/>
-        <dm:release>SES 5</dm:release>
-      </dm:docmanager>
-    </info>
-    <para>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:maintainer>tbazant@suse.com</dm:maintainer>
+   <dm:status>editing</dm:status>
+   <dm:deadline/>
+   <dm:priority/>
+   <dm:translation>yes</dm:translation>
+   <dm:languages/>
+   <dm:release>SES 5</dm:release>
+  </dm:docmanager>
+ </info>
+ <para>
   This chapter introduces steps to upgrade &storage; from the previous
   release(s) to the current one.
  </para>
@@ -1040,23 +1040,28 @@ exported keyring for client.bootstrap-osd
        <filename>/srv/salt/ceph/configuration/files/ceph.conf.j2</filename>
        template.
       </para>
-      <note>
-       <title>Custom <filename>ceph.conf</filename></title>
+      <important>
+       <title>Importing Custom Changes to <filename>ceph.comf</filename></title>
        <para>
-        If you need to integrate the <filename>ceph.conf</filename> file with
-        custom changes, wait until the engulf/upgrade process successfully
-        finishes. Then edit the
+        You need to migrate any necessary settings from the
+        <filename>ceph.conf.import</filename> file to individual files in the
+        &deepsea;'s <filename>ceph.conf.d</filename> directory (see
+        <xref linkend="ds.custom.cephconf"/> for more details). Then remove the
+        <option>configuration_init</option> setting from the
         <filename>/srv/pillar/ceph/proposals/config/stack/default/ceph/cluster.yml</filename>
-        file and comment the following line:
+        file.
+       </para>
+       <para>
+        If you decide not to migrate settings from
+        <filename>ceph.conf.import</filename>, consider adding the following
+        settings manually:
        </para>
 <screen>
-configuration_init: default-import
+mon health preluminous_compat = true
+mon health preluminous compat warning = false
+rbd default features = 3
 </screen>
-       <para>
-        Save the file and follow the information in
-        <xref linkend="ds.custom.cephconf"/>.
-       </para>
-      </note>
+      </important>
      </listitem>
      <listitem>
       <para>
