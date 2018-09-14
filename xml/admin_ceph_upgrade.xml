@@ -1041,10 +1041,10 @@ exported keyring for client.bootstrap-osd
        template.
       </para>
       <important>
-       <title>Importing Custom Changes to <filename>ceph.comf</filename></title>
+       <title>Importing Custom Changes to <filename>ceph.conf</filename></title>
        <para>
         You need to migrate any necessary settings from the
-        <filename>ceph.conf.import</filename> file to individual files in the
+        <filename>ceph.conf.import</filename> file to individual files in
         &deepsea;'s <filename>ceph.conf.d</filename> directory (see
         <xref linkend="ds.custom.cephconf"/> for more details). Then remove the
         <option>configuration_init</option> setting from the
