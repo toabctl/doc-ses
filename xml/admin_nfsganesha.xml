@@ -139,9 +139,9 @@
        <para>
         Example: with the value <literal>/cephfs/</literal> and after executing
        </para>
-<screen>
-&prompt.root;mount <replaceable>GANESHA_IP</replaceable>:/cephfs/ /mnt/
-</screen>
+       <screen>
+        &prompt.root;mount <replaceable>GANESHA_IP</replaceable>:/cephfs/ /mnt/
+       </screen>
        <para>
         The &cephfs; data is available in the directory
         <filename>/mnt/cephfs/</filename> on the client.

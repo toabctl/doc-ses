@@ -76,6 +76,12 @@
      <itemizedlist mark="bullet" spacing="normal">
       <listitem>
        <para>
+        Updated Access_Type option with a tip on restricting global access in <xref linkend="ceph.nfsganesha.config.general.export"/>
+        (<link xlink:href="https://bugzilla.suse.com/show_bug.cgi?id=1109101"/>).
+       </para>
+      </listitem>
+      <listitem>
+       <para>
         Minor update to <xref linkend="ogw.ssl.simple"/> and <xref linkend="ogw.ssl.advanced"/>
         (<link xlink:href="https://bugzilla.suse.com/show_bug.cgi?id=1095609"/>).
        </para>
