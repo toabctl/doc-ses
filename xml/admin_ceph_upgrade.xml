@@ -71,6 +71,90 @@
    </listitem>
    <listitem>
     <para>
+     In case you previously upgraded from version 4, verify that the upgrade to
+     version 5 was completed successfully:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       Check for the existence of the
+       <filename>/srv/salt/ceph/configuration/files/ceph.conf.import</filename>
+       file. The engulf process, which is invoked by the <command>salt-run
+       populate.engulf_existing_cluster</command> command during the upgrade
+       from SES 4 to 5, creates the <filename>ceph.conf.import</filename> file,
+       and sets the <option>configuration_init: default-import</option> option
+       in
+       <command>/srv/pillar/ceph/proposals/config/stack/default/ceph/cluster.yml</command>.
+      </para>
+      <para>
+       If <option>configuration_init</option> is still set to
+       <option>default-import</option>, the cluster is still using
+       <filename>ceph.conf.import</filename> as its configuration file and not
+       the &deepsea;'s default <filename>ceph.conf</filename> which is compiled
+       from files in
+       <filename>/srv/salt/ceph/configuration/files/ceph.conf.d/</filename>.
+      </para>
+      <para>
+       Therefore you need to inspect <filename>ceph.conf.import</filename> for
+       any custom configuration, and possibly move the configuration to one of
+       the files in
+       <filename>/srv/salt/ceph/configuration/files/ceph.conf.d/</filename>.
+       Then remove the <option>configuration_init: default-import</option> line
+       from
+       <filename>/srv/pillar/ceph/proposals/config/stack/default/ceph/cluster.yml</filename>.
+      </para>
+      <warning>
+       <title>Default &deepsea; Configuration</title>
+       <para>
+        If you <emphasis role="bold">do not</emphasis> merge the configuration
+        from <filename>ceph.conf.import</filename> and remove the
+        <option>configuration_init: default-import</option> option, any default
+        configuration settings we ship as part of &deepsea; (stored in
+        <filename>/srv/salt/ceph/configuration/files/ceph.conf.j2</filename>)
+        will not be applied to the cluster.
+       </para>
+      </warning>
+     </listitem>
+     <listitem>
+      <para>
+       Check if the cluster uses the new bucket type 'straw2':
+      </para>
+<screen>
+&prompt.cephuser;ceph osd crush dump | grep straw
+</screen>
+     </listitem>
+     <listitem>
+      <para>
+       Check that &ceph; 'jewel' profile is used:
+      </para>
+<screen>
+&prompt.cephuser;ceph osd crush dump | grep profile
+</screen>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     In case old RBD kernel clients (older than &prevcephos;) are being used,
+     refer to <xref linkend="rbd-old-clients-map" />. We recommend upgrading
+     old RBD kernel clients if possible.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     If &oa; is located on the &adm;, it will be unavailable after you upgrade
+     the node. The new &dashboard; will not be available until you deploy it by
+     using &deepsea;.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The cluster upgrade may take a long time&mdash;approximately the time it
+     takes to upgrade one machine multiplied by the number of cluster nodes.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
      A single node cannot be upgraded while running the previous &sls; release,
      but needs to be rebooted into the new version's installer. Therefore the
      services that the node provides will be unavailable for some time. The
@@ -137,31 +221,6 @@
       </para>
      </listitem>
     </orderedlist>
-   </listitem>
-   <listitem>
-    <para>
-     If possible, upgrade all the daemons of a specific type&mdash;for example
-     all monitor daemons or all OSD daemons&mdash;in a row to ensure that they
-     are all on the same release version. Also, upgrade all daemons in your
-     cluster before trying to exercise new functionality in a release.
-    </para>
-    <para>
-     After all daemons of a specific type are upgraded, check their status.
-    </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       Ensure that each monitor has rejoined the quorum after all monitors are
-       upgraded.
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Ensure each &osd; daemon has rejoined the cluster after all OSDs are
-       upgraded.
-      </para>
-     </listitem>
-    </itemizedlist>
    </listitem>
    <listitem>
     <para>
@@ -239,9 +298,28 @@ mds standby for name = mds.456-another-mds
    </listitem>
    <listitem>
     <para>
-     In case old RBD kernel clients (older than &prevcephos;) are being used,
-     refer to <xref linkend="rbd-old-clients-map" />.
+     If possible, upgrade all the daemons of a specific type&mdash;for example
+     all monitor daemons or all OSD daemons&mdash;in a row to ensure that they
+     are all on the same release version. Also, upgrade all daemons in your
+     cluster before trying to exercise new functionality in a release.
     </para>
+    <para>
+     After all daemons of a specific type are upgraded, check their status.
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       Ensure that each monitor has rejoined the quorum after all monitors are
+       upgraded.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Ensure each &osd; daemon has rejoined the cluster after all OSDs are
+       upgraded.
+      </para>
+     </listitem>
+    </itemizedlist>
    </listitem>
    <listitem>
     <para>
@@ -282,7 +360,7 @@ mds standby for name = mds.456-another-mds
     <para>
      Ensure there is enough free disk space on each cluster node. If there is
      not enough free disk space, do not continue with the upgrade unless you
-     free enough disk space.
+     free it.
     </para>
    </listitem>
    <listitem>
@@ -290,19 +368,6 @@ mds standby for name = mds.456-another-mds
      Check <command>cluster health</command> before starting the upgrade
      procedure and do not start the upgrade unless each cluster node reports
      'HEALTH_OK'.
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     If &oa; is located on the &adm;, it will be unavailable after you upgrade
-     the node. The new &dashboard; will not be available until you deploy it by
-     using &deepsea;.
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     The cluster upgrade may take a long time&mdash;approximately the time it
-     takes to upgrade one machine multiplied by the number of cluster nodes.
     </para>
    </listitem>
   </itemizedlist>
@@ -673,37 +738,6 @@ subvolume_init: disabled
      <para>
       Verify access to gateways (such as &iscsi;, or &ogw;) and &rbd;.
      </para>
-    </listitem>
-    <listitem>
-     <para>
-      In case you previously upgraded from version 4, verify that the upgrade
-      to version 5 was completed successfully:
-     </para>
-     <itemizedlist>
-      <listitem>
-       <para>
-        Check for the existence of the
-        <filename>/srv/salt/ceph/configuration/files/ceph.conf.import</filename>
-        file. It is a backup of SES 4's <filename>ceph.conf</filename> file.
-       </para>
-      </listitem>
-      <listitem>
-       <para>
-        Check if the cluster uses the new bucket type 'straw2':
-       </para>
-<screen>
-&prompt.cephuser;ceph osd crush dump | grep straw
-</screen>
-      </listitem>
-      <listitem>
-       <para>
-        Check that &ceph; 'jewel' profile is used:
-       </para>
-<screen>
-&prompt.cephuser;ceph osd crush dump | grep profile
-</screen>
-      </listitem>
-     </itemizedlist>
     </listitem>
     <listitem>
      <para>
