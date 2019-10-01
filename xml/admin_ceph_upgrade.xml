@@ -77,32 +77,34 @@
     <itemizedlist>
      <listitem>
       <para>
-       Check for the existence of the
-       <filename>/srv/salt/ceph/configuration/files/ceph.conf.import</filename>
-       file. The engulf process, which is invoked by the <command>salt-run
-       populate.engulf_existing_cluster</command> command during the upgrade
-       from SES 4 to 5, creates the <filename>ceph.conf.import</filename> file,
-       and sets the <option>configuration_init: default-import</option> option
-       in
-       <command>/srv/pillar/ceph/proposals/config/stack/default/ceph/cluster.yml</command>.
+       Check for the existence of the file
       </para>
+<screen>/srv/salt/ceph/configuration/files/ceph.conf.import</screen>
+      <para>
+       It is created by the engulf process during the upgrade from SES 4 to 5.
+       Also, the <option>configuration_init: default-import</option> option is
+       set in the file
+      </para>
+<screen>/srv/pillar/ceph/proposals/config/stack/default/ceph/cluster.yml</screen>
       <para>
        If <option>configuration_init</option> is still set to
-       <option>default-import</option>, the cluster is still using
+       <option>default-import</option>, the cluster is using
        <filename>ceph.conf.import</filename> as its configuration file and not
        the &deepsea;'s default <filename>ceph.conf</filename> which is compiled
        from files in
-       <filename>/srv/salt/ceph/configuration/files/ceph.conf.d/</filename>.
       </para>
+<screen>/srv/salt/ceph/configuration/files/ceph.conf.d/</screen>
       <para>
        Therefore you need to inspect <filename>ceph.conf.import</filename> for
        any custom configuration, and possibly move the configuration to one of
        the files in
-       <filename>/srv/salt/ceph/configuration/files/ceph.conf.d/</filename>.
+      </para>
+<screen>/srv/salt/ceph/configuration/files/ceph.conf.d/</screen>
+      <para>
        Then remove the <option>configuration_init: default-import</option> line
        from
-       <filename>/srv/pillar/ceph/proposals/config/stack/default/ceph/cluster.yml</filename>.
       </para>
+<screen>/srv/pillar/ceph/proposals/config/stack/default/ceph/cluster.yml</screen>
       <warning>
        <title>Default &deepsea; Configuration</title>
        <para>
