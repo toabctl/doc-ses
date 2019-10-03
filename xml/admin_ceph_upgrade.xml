@@ -374,6 +374,20 @@ mds standby for name = mds.456-another-mds
    </listitem>
   </itemizedlist>
  </sect1>
+ <sect1 xml:id="upgrade-backup">
+  <title>Backup Cluster Configuration and Data</title>
+
+  <para>
+   Although creating backups of cluster's configuration and data is not
+   mandatory, we strongly recommend backing up important configuration files
+   and cluster data.
+  </para>
+
+  <para>
+   For more details on which files need to be backed up, refer to
+   <xref linkend="cha-deployment-backup" />.
+  </para>
+ </sect1>
  <sect1 xml:id="upgrade-main">
   <title>Roadmap of Upgrade Steps</title>
 
@@ -605,20 +619,6 @@ subvolume_init: disabled
     </para>
    </step>
   </procedure>
- </sect1>
- <sect1 xml:id="upgrade-backup">
-  <title>Backup Cluster Configuration and Data</title>
-
-  <para>
-   Although creating backups of cluster's configuration and data is not
-   mandatory, we strongly recommend backing up important configuration files
-   and cluster data.
-  </para>
-
-  <para>
-   For more details on which files need to be backed up, refer to
-   <xref linkend="cha-deployment-backup" />.
-  </para>
  </sect1>
  <sect1 xml:id="upgrade-verify-current">
   <title>Verify the Current Environment</title>
